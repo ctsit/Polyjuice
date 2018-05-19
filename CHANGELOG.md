@@ -11,16 +11,26 @@ Example
  * This is a quick summary for people to understand what this release is about.
 
 ### Fixed
- * Fixed broke thing 1 (DevMattm) 
+ * Fixed broke thing 1 (DevMattm)
 
 ### Added
- * Added cool new feature (DevMattm) 
+ * Added cool new feature (DevMattm)
 
 ### Changed
- * Changed something to make more awesome (DevMattm) 
+ * Changed something to make more awesome (DevMattm)
 
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
+##[1.0.0] 2018-05-18
+### Summary
+ * The requirements file was update to make use of the latest pydicom version. This lead to pydicom references needing update throughout the program. Also, handling for ids.csv file was enhanced to allow skipping if no IDs specified so that a directory if dicom files could be processed without subject ID renaming.
+
+### Fixed
+  * ID skipping
+
+### Changed
+ * Requirements for program to return
+ * Pydicom version 
 
 ##[0.2.0]
  * Fix id_pairs bug
