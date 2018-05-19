@@ -1,0 +1,35 @@
+* Integrate progress bar
+
+* Have polyjuice read Ignore list
+
+* [maybe] Rename files numerically
+
+* Test on Linux
+
+* Make new id csv not required
+
+* Change Tags (0008 ,1048 ) , (0032 ,1032)
+
+* Change the PatientsID to NACC format
+
+* Add to README: You must create "PET" and "MRI" directories on tools2 and you must make sftp connection manually before trying to do it with polyjuice
+
+---------------------------------------------------
+
+# Complete
+
+* Add (optional) functionality to zip output file after cleaning
+
+* Add a log
+
+* Add list of ISOs and desired output folders to config file
+
+* TODO Get dicom files from iso
+
+* TODO Update config file with necessary tags
+
+* Make logger class or function
+
+* Find way to get around needing to use --multiple option
+
+* Add docstrings to polyjuice
