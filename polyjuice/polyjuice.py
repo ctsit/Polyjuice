@@ -1,4 +1,4 @@
-#! /Library/Frameworks/Python.framework/Versions/2.7/bin/python
+#!/usr/bin/env python3
 docstr = """
 Polyjuice
 Usage:
@@ -118,7 +118,7 @@ def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
     '''
     try:
         name = os.path.basename(working_file)
-        with open(working_file) as working_file:
+        with open(working_file, 'rb') as working_file:
             working_message = "Working on {}".format(name)
             log(working_message)
             image = DicomImage(working_file)
