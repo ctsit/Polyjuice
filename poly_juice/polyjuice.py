@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+
+import os
+import os.path
+import shutil
+import yaml
+import csv
+from docopt import docopt
+from lumberjack import Lumberjack
+from filch import DicomCaretaker
+from dicom_image import DicomImage
+
 docstr = """
 Polyjuice
 Usage:
@@ -13,23 +24,10 @@ Options:
   -c --config                   Use config file to get input and output paths
 
 Instructions:
-    Run polyjuice on individual files, ISOs, or directories. This will give an ouput folder
-    containing dicom files that have had their tags cleaned according to your standards set
-    in the config file.
+    Run polyjuice on individual files, ISOs, or directories. This will give an
+    ouput folder containing dicom files that have had their tags cleaned
+    according to your standards set in the config file.
 """
-
-import os
-import os.path
-import shutil
-import yaml
-import time
-import csv
-import pydicom
-from pydicom import dcmread
-from docopt import docopt
-from poly_juice.lumberjack import Lumberjack
-from poly_juice.filch import DicomCaretaker
-from poly_juice.dicom_image import DicomImage
 
 CONFIG_PATH = '<config_file>'
 INPUT_DIR = '<input_path>'
@@ -134,7 +132,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                 mag_field = check_mag_field(editor, output_file, mag_field, log)
         except Exception as e:
             print("{} failed".format(parent_file))
-            print (str(e))
+            print(str(e))
             failure_message = "{} failed".format(parent_file) + "\n" + str(e)
             log(failure_message)
 
@@ -149,7 +147,8 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                     working_file = os.path.join(path, name)
                     if check_file_type.endswith(".iso"):
                         # Mount and Unmount ISO
-                        new_parent_dir = editor.mount_iso(working_file, out_dir)
+                        new_parent_dir = editor.mount_iso(working_file,
+                                                          out_dir)
                         dicom_folders = walk_directory(new_parent_dir, out_dir,
                                                        zip_dir, modifications,
                                                        id_pairs, dicom_folders,

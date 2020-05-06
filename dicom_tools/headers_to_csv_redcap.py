@@ -13,7 +13,6 @@ def convert_tuple_to_dict(tup, di):
 
 def main():
     with open('dicom_tools/output.csv', 'w+', newline='') as output:
-        # fieldnames = ['redcap_event_name', 'patient_id', 'series_instance_id', 'study_instance_id', 'instance_number', 'series_description', 'study_date', 'magnetic_field_strength', 'manufacturer', 'manufacturer_model_name', 'form_dicom_complete']
         fieldnames = ["PatientID",
                       "ImageType",
                       "PatientName",
@@ -49,27 +48,33 @@ def main():
             writer.writerow(final)
 
 
-# it looks like for the REDCap csv output we do not want to look at every file in every folder (no instance number + only one row per PTID/visit) - only the first file for the visit. does every folder have a file called '1.dcm'? i could specify to look at that one rather than walking through every file or figuring out how to stop once it finds the first .dcm file and move to the next folder.
-# No, all the files have different names in each folder. 
+# it looks like for the REDCap csv output we do not want to look at every file
+# in every folder (no instance number + only one row per PTID/visit) - only the
+# first file for the visit. i need to figure out how to stop once it finds the
+# first .dcm file and move to the next folder.
 
 
 def make_csv(row) -> dict:
 
     filled = {
-        'ptid': row['PatientID'],  # Is ptid present for all MRI and PET images?
-        'redcap_event_name': 'initial_visit_year_arm_1',  # this isn't just initial visit year data- the PET, maybe, depending on how close the visit dates are to the corresponding MRI. this might need to mostly be done by hand in excel.
-        'image_type': row['ImageType'],  # This is a checkbox question that can have 1, 2, or 1 AND 2 as the value based on if there is MRI(1) and PET(2) data present
-        # ImageType is a tuple with a few internal lists- ('_list' item 2 'M' or 'P')
-        # ImageType will determine if MRI or PET fields are filled
+        'ptid': row['PatientID'],  # Is ptid present for all MRI / PET images?
+        'redcap_event_name': '',
+        'image_type': row['ImageType'],
+        # ImageType is a tuple with a few internal lists-
+        # ('_list' item 2 'M' or 'P')
+        # ImageType will determine if MRI or PET fields are filled.
+        # REDCap form can have 1, 2, or 1 AND 2 as answers.
+        # The MRI and PET data for the same visit must be manually combined.
         'img_mri_patient_name': '',
         'img_mri_patient_id': '',
         'img_mri_date': '',
         'img_mri_study_descrip': '',
         'img_mri_modality': '',  # 'MR' or
-        'img_mri_ref_physician': '',  # This is a tuple; use the value of item 'original_string'
+        'img_mri_ref_physician': '',
+        # This is a tuple; use the value of 'original_string'
         'img_mri_inst': '',
         'img_mri_site': '',  # MSMC, UF, or UM
-        'img_pet_tracer': '',  # ??
+        'img_pet_tracer': '',
         'img_pet_patient_name': '',
         'img_pet_patient_id': '',
         'img_pet_date': '',
@@ -77,7 +82,7 @@ def make_csv(row) -> dict:
         'img_pet_modality': '',  # 'MR' or
         'img_pet_ref_physician': '',
         'img_pet_inst': '',
-        'img_pet_site': '',  # MSMC, UF, or UM
+        'img_pet_site': '',  # MSMC, UF, or UM - couldn't find in dcmread
     }
 
     if row['image_type'] == 'M':
@@ -86,10 +91,10 @@ def make_csv(row) -> dict:
         filled['img_mri_patient_id'] = row['PatientID']
         filled['img_mri_date'] = row['StudyDate']
         filled['img_mri_study_descrip'] = row['SeriesDescription']
-        filled['img_mri_modality'] = row['Modality']  # 'MR' or
-        filled['img_mri_ref_physician'] = row['ReferringPhysicianName']  # This is a tuple; use the value of item 'original_string'
+        filled['img_mri_modality'] = row['Modality']
+        filled['img_mri_ref_physician'] = row['ReferringPhysicianName']
         filled['img_mri_inst'] = row['InstitutionName']
-        filled['img_mri_site'] = 'MSMC'  # MSMC, UF, or UM
+        filled['img_mri_site'] = 'MSMC'
 
     elif row['image_type'] == 'P':
         filled['image_type'] = '2'
@@ -98,10 +103,10 @@ def make_csv(row) -> dict:
         filled['img_pet_patient_id'] = row['PatientID']
         filled['img_pet_date'] = row['StudyDate']
         filled['img_pet_study_descrip'] = row['SeriesDescription']
-        filled['img_pet_modality'] = row['Modality']  # 'MR' or
+        filled['img_pet_modality'] = row['Modality']
         filled['img_pet_ref_physician'] = row['ReferringPhysicianName']
         filled['img_pet_inst'] = row['InstitutionName']
-        filled['img_pet_site'] = 'MSMC'  # MSMC, UF, or UM
+        filled['img_pet_site'] = 'MSMC'
 
     filled['imaging_metadata_complete'] = '2'
 
