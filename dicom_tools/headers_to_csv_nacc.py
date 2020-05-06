@@ -13,7 +13,6 @@ def convert_tuple_to_dict(tup, di):
 
 def main():
     with open('dicom_tools/output.csv', 'w+', newline='') as output:
-        # fieldnames = ['redcap_event_name', 'patient_id', 'series_instance_id', 'study_instance_id', 'instance_number', 'series_description', 'study_date', 'magnetic_field_strength', 'manufacturer', 'manufacturer_model_name', 'form_dicom_complete']
         fieldnames = ["PatientID",
                       "SeriesInstanceUID",
                       "StudyInstanceUID",
@@ -34,12 +33,15 @@ def main():
             ds = dcmread(dcm_file)
 
             data = (
-                    ["PatientID", ds.get("PatientID", "None")],  # (Put your internal PTID in this tag, we will extract it and replace with NACCID)
+                    ["PatientID", ds.get("PatientID", "None")],
+                    # (Put your internal PTID in this tag,
+                    # we will extract it and replace with NACCID)
                     ["SeriesInstanceUID", ds.get("SeriesInstanceUID", "None")],
                     ["StudyInstanceUID", ds.get("StudyInstanceID", "None")],
                     ["InstanceNumber", ds.get("InstanceNumber", "None")],
                     ["SeriesDescription", ds.get("SeriesDescription", "None")],
-                    ["StudyDate", ds.get("StudyDate", "None")],  # (min: 1/1/2000, max: current date)
+                    ["StudyDate", ds.get("StudyDate", "None")],
+                    # (min: 1/1/2000, max: current date)
                     ["MagneticFieldStrength", ds.get("MagneticFieldStrength", "None")],
                     ["Manufacturer", ds.get("Manufacturer", "None")],
                     ["ManufacturerModelName", ds.get("ManufacturerModelName", "None")]

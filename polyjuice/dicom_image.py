@@ -1,5 +1,6 @@
 import pydicom
 
+
 class DicomImage(object):
 
     def __init__(self, dicom_file):
