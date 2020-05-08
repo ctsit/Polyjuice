@@ -35,17 +35,6 @@ def search_directory(parent_file: str, out_dir: str, dicom_folders: list, writer
                     print(str(e))
 
 
-# only first file in folder
-        # for root, dirs, files in os.walk(input_directory):
-        #     for names in files:
-        #         try:
-        #             first_file = next((os.path.join(root, f) for f in os.listdir(root) if os.path.isfile(os.path.join(root, f))))
-        #             if names in first_file and names.endswith(".dcm"):
-        #                 dcm_files.append(os.path.join(root, names))
-        #         except Exception:
-        #             break
-
-
 def read_files(dcm_file, writer):
     ds = dcmread(dcm_file)
 
@@ -96,12 +85,6 @@ def main():
         dcm_folders = []
         # Take a stroll through the folders
         search_directory(input_directory, output_file, dcm_folders, writer)
-
-
-# it looks like for the REDCap csv output we do not want to look at every file
-# in every folder (no instance number + only one row per PTID/visit) - only the
-# first file for the visit. i need to figure out how to stop once it finds the
-# first .dcm file and move to the next folder.
 
 
 def make_csv(row: dict, dcm_file: str) -> dict:
