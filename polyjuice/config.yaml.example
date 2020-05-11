@@ -1,8 +1,8 @@
-#Location for the zipped files
+# Location for the zipped files
 zip: /my/path/to/zip/folder
 new_IDs: /my/path/to/ids.csv
 
-#This dictionary has a dictionary of tags whose value should be modified
+# This dictionary has a dictionary of tags whose value should be modified
 modifications:
   InstanceCreatorUID: ''
   SOPInstanceUID: ''
@@ -14,19 +14,19 @@ modifications:
   ReferringPhysicianTelephoneNumbers: ''
   StationName: ''
   StudyDescription: ''
-  #SeriesDescription: ''
+  # SeriesDescription: ''
   RequestingPhysician: ''
   InstitutionalDepartmentName: ''
-  #InstanceNumber: ''
+  # InstanceNumber: ''
   PhysiciansOfRecord: ''
   PerformingPhysicianName: ''
   NameOfPhysicianReadingStudy: ''
-  OperatorName: ''
+  OperatorsName: ''
   AdmittingDiadnosesDescription: ''
   ReferencedSOPInstanceUID: ''
   DerivationDescription: ''
   PatientName: Anonymous
-  #PatientID: ''
+  # PatientID: ''
   PatientBirthDate: "19010101"
   PatientBirthTime: ''
   PatientSex: ''
@@ -36,18 +36,18 @@ modifications:
   PatientSize: ''
   PatientWeight: ''
   MedicalRecordLocator: ''
-  #Manufacturer: ''
-  #ManufacturersModelName: ''
+  # Manufacturer: ''
+  # ManufacturersModelName: ''
   EthnicGroup: ''
   Occupation: ''
   AdditionalPatientHistory: ''
   PatientComments: ''
   DeviceSerialNumber: ''
   ProtocolName: ''
-  #StudyInstanceUID: ''
-  #StudyDate: ''
-  #SeriesInstanceUID: ''
-  #MagneticFieldStrength: ''
+  # StudyInstanceUID: ''
+  # StudyDate: ''
+  # SeriesInstanceUID: ''
+  # MagneticFieldStrength: ''
   StudyID: ''
   FrameOfReferenceUID: ''
   SynchronizationonFrameOfReferenceUID: ''
@@ -62,9 +62,9 @@ modifications:
   RescaleSlope: Null
   RescaleType: Null
 
-#Optional: Use the dictionaries below to go through multiple ISOs
+# Optional: Use the dictionaries below to go through multiple ISOs
 
-#This is the filepath for the input and output. Put the actual files in the IO_pairs dictionary.
+# This is the filepath for the input and output. Put the actual files in the IO_pairs dictionary.
 in_data_root: my/root/input/path
 out_data_root: my/root/output/path
 
