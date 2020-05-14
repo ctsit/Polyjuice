@@ -60,7 +60,9 @@ class TestFileCleaner(unittest.TestCase):
             'StudyInstanceUID': '1.2.840.113845.11.1000000001874101095',
             'StudyDate': '20100101',
             'SeriesInstanceUID': '1.2.840.113619.2.244.6945.200138',
-            'MagneticFieldStrength': pydicom.valuerep.DSfloat(3)
+            'MagneticFieldStrength': pydicom.valuerep.DSfloat(3),
+            'InstanceNumber': '',
+            'SeriesDescription': ''
             }
 
         clean_files(self.editor, self.working_file, self.out_dir, self.modifications, self.id_pairs, self.dicom_folders, self.log)
@@ -143,6 +145,8 @@ def get_intact_results(ds):
             ["StudyInstanceUID", ds.get("StudyInstanceUID", "Value")],
             ["StudyDate", ds.get("StudyDate", "Value")],
             ["SeriesInstanceUID", ds.get("SeriesInstanceUID", "Value")],
+            ["InstanceNumber", ds.get("InstanceNumber", "Value")],
+            ["SeriesDescription", ds.get("SeriesDescription", "Value")],
             ["MagneticFieldStrength", ds.get("MagneticFieldStrength", "Value")]
     )
 
