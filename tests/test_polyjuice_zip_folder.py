@@ -2,8 +2,8 @@ import unittest
 
 import os
 import os.path
-from polyjuice.polyjuice import zip_folder
-from polyjuice.lumberjack import Lumberjack
+from poly_juice.polyjuice import zip_folder
+from poly_juice.lumberjack import Lumberjack
 
 
 class TestZipFolder(unittest.TestCase):
