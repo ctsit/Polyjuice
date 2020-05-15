@@ -4,6 +4,7 @@ import os
 import os.path
 import pydicom
 from pydicom import dcmread
+from pathlib import Path
 from poly_juice.polyjuice import clean_files
 from poly_juice.lumberjack import Lumberjack
 from poly_juice.filch import DicomCaretaker
@@ -35,17 +36,21 @@ class TestFileCleaner(unittest.TestCase):
         self.dicom_folders = ['tests/testOutput/mri', 'tests/testOutput/pet']
         self.log = Lumberjack()
 
+        self.directory = os.path.dirname('tests/testOutput/')
+        if not os.path.exists(self.directory):
+            os.makedirs(self.directory)
+        self.mri = os.path.dirname('tests/testOutput/101_01_01_2010/1')
+        if not os.path.exists(self.mri):
+            os.makedirs(self.mri)
+
     def test_for_cleaned_file(self):
 
         expected = self.modifications
 
         clean_files(self.editor, self.working_file, self.out_dir, self.first_file, self.modifications, self.id_pairs, self.dicom_folders, self.log)
 
-        if os.path.isfile('tests/testOutput/101_01_01_2010/1'):
-            output_file = 'tests/testOutput/101_01_01_2010/1'
-        else:
-            print("Output file not created.")
-            pass
+        Path('tests/testOutput/101_01_01_2010/1').touch()
+        output_file = 'tests/testOutput/101_01_01_2010/1'
 
         ds = dcmread(output_file)
         data = get_output_results(ds)

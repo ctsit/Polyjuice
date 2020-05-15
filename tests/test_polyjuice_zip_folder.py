@@ -8,6 +8,18 @@ from poly_juice.lumberjack import Lumberjack
 
 class TestZipFolder(unittest.TestCase):
 
+    def setUp(self):
+        self.directory = os.path.dirname('tests/testOutput/')
+        if not os.path.exists(self.directory):
+            os.makedirs(self.directory)
+
+        self.mri = os.path.dirname('tests/testOutput/mri/')
+        self.pet = os.path.dirname('tests/testOutput/pet/')
+        if not os.path.exists(self.mri):
+            os.makedirs(self.mri)
+        if not os.path.exists(self.pet):
+            os.makedirs(self.pet)
+
     def test_zips(self):
         dicom_folders = ['tests/testOutput/mri', 'tests/testOutput/pet']
         zip_dir = 'tests/testOutput'
