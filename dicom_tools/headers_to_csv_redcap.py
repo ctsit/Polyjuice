@@ -61,7 +61,8 @@ def main():
     with open(output_file, 'w+', newline='') as output:
         fieldnames = ['ptid',
                       'redcap_event_name',
-                      'image_type',
+                      'image_type___1',
+                      'image_type___2',
                       'img_mri_patient_name',
                       'img_mri_patient_id',
                       'img_mri_date',
@@ -79,7 +80,7 @@ def main():
                       'img_pet_ref_physician',
                       'img_pet_inst',
                       'img_pet_site',
-                      'imaging_inventory_complete']
+                      'imaging_metadata_complete']
         writer = csv.DictWriter(output, fieldnames=fieldnames)
         writer.writeheader()
         dcm_folders = []
@@ -92,7 +93,8 @@ def make_csv(row: dict, dcm_file: str) -> dict:
     filled = {
         'ptid': row['PatientID'],  # Is ptid present for all MRI / PET images?
         'redcap_event_name': '',
-        'image_type': '',
+        'image_type___1': '',
+        'image_type___2': '',
         # REDCap form can have 1, 2, or 1 AND 2 as answers.
         # The MRI and PET data for the same visit must be manually combined.
         'img_mri_patient_name': '',
@@ -116,7 +118,8 @@ def make_csv(row: dict, dcm_file: str) -> dict:
     }
 
     if '/MRI' in dcm_file:
-        filled['image_type'] = '1'
+        filled['image_type___1'] = '1'
+        filled['image_type___2'] = '0'
         filled['img_mri_patient_name'] = row['PatientName']
         filled['img_mri_patient_id'] = row['PatientID']
         filled['img_mri_date'] = row['StudyDate']
@@ -127,7 +130,8 @@ def make_csv(row: dict, dcm_file: str) -> dict:
         filled['img_mri_site'] = 'MSMC'
 
     elif '/PET' in dcm_file:
-        filled['image_type'] = '2'
+        filled['image_type___1'] = '0'
+        filled['image_type___2'] = '1'
         filled['img_pet_tracer'] = ''
         filled['img_pet_patient_name'] = row['PatientName']
         filled['img_pet_patient_id'] = row['PatientID']
@@ -138,7 +142,7 @@ def make_csv(row: dict, dcm_file: str) -> dict:
         filled['img_pet_inst'] = row['InstitutionName']
         filled['img_pet_site'] = 'MSMC'
 
-    filled['imaging_inventory_complete'] = '2'
+    filled['imaging_metadata_complete'] = '2'
 
     return filled
 
