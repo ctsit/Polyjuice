@@ -41,7 +41,8 @@ _use_config = '--config'
 
 def get_config(config_path: str) -> dict:
     '''
-        Read in the config file. If the config file is missing or the wrong format, exit the program.
+        Read in the config file. If the config file is missing or the wrong
+        format, exit the program.
     '''
     try:
         with open(config_path, 'r') as config_file:
@@ -50,6 +51,7 @@ def get_config(config_path: str) -> dict:
         print("Error: Check config file")
         exit(e)
     return config
+
 
 def check_directory(out_dir: str) -> None:
     '''
@@ -62,7 +64,8 @@ def check_directory(out_dir: str) -> None:
             raise e
 
 
-def check_mag_field(editor: DicomCaretaker, output_file, value, log: Lumberjack) -> str:
+def check_mag_field(editor: DicomCaretaker, output_file, value,
+                    log: Lumberjack) -> str:
 
     ds = dcmread(output_file)
 
@@ -80,7 +83,8 @@ def check_mag_field(editor: DicomCaretaker, output_file, value, log: Lumberjack)
     return value
 
 
-def identify_output(editor: DicomCaretaker, working_file: str, out_dir: str, log: Lumberjack) -> str:
+def identify_output(editor: DicomCaretaker, working_file: str, out_dir: str,
+                    log: Lumberjack) -> str:
 
     name = os.path.basename(working_file)
     with open(working_file, 'rb') as working_file:
@@ -95,8 +99,9 @@ def identify_output(editor: DicomCaretaker, working_file: str, out_dir: str, log
     return output_name
 
 
-def walk_directory(parent_file: str, out_dir: str, zip_dir: str, modifications: dict,
-                    id_pairs: dict, dicom_folders: list, log: Lumberjack) -> list:
+def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
+                   modifications: dict, id_pairs: dict, dicom_folders: list,
+                   log: Lumberjack) -> list:
     '''
         Walk through directories and send individual files to be cleaned.
     '''
@@ -108,16 +113,17 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str, modifications: 
             if parent_file.endswith(".iso"):
                 # Mount and unmount ISO
                 new_parent_dir = editor.mount_iso(parent_file, out_dir)
-                dicom_folders = walk_directory(new_parent_dir, out_dir, zip_dir,
-                                    modifications, id_pairs, dicom_folders, log)
+                dicom_folders = walk_directory(new_parent_dir, out_dir,
+                                               zip_dir, modifications,
+                                               id_pairs, dicom_folders, log)
                 editor.unmount_iso()
             else:
                 # Send file to be cleaned
                 first_file = parent_file
                 output_file = identify_output(editor, parent_file, out_dir, log)
                 dicom_folders = clean_files(editor, parent_file, out_dir,
-                                    first_file,
-                                    modifications, id_pairs, dicom_folders, log)
+                                            first_file, modifications,
+                                            id_pairs, dicom_folders, log)
                 mag_field = check_mag_field(editor, output_file, mag_field, log)
         except Exception as e:
             print("{} failed".format(parent_file))
@@ -137,30 +143,35 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str, modifications: 
                     if check_file_type.endswith(".iso"):
                         # Mount and Unmount ISO
                         new_parent_dir = editor.mount_iso(working_file, out_dir)
-                        dicom_folders = walk_directory(new_parent_dir, out_dir, zip_dir,
-                                            modifications, id_pairs, dicom_folders, log)
+                        dicom_folders = walk_directory(new_parent_dir, out_dir,
+                                                       zip_dir, modifications,
+                                                       id_pairs, dicom_folders,
+                                                       log)
                         editor.unmount_iso()
                     else:
                         # Send file to be cleaned
-                        output_file = identify_output(editor, working_file, out_dir, log)
+                        output_file = identify_output(editor, working_file,
+                                                      out_dir, log)
                         dicom_folders = clean_files(editor, working_file, out_dir,
-                                            first_file,
-                                            modifications, id_pairs, dicom_folders, log)
+                                                    first_file, modifications,
+                                                    id_pairs, dicom_folders, log)
                         mag_field = check_mag_field(editor, output_file, mag_field, log)
 
                 except Exception as e:
                     print("{} failed".format(name))
-                    print (str(e))
+                    print(str(e))
                     failure_message = "{} failed".format(name) + "\n" + str(e)
                     log(failure_message)
     return dicom_folders
+
 
 def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
                 first_file: str,
                 modifications: dict, id_pairs: dict, dicom_folders: list,
                 log: Lumberjack) -> list:
     '''
-        Use DicomCaretaker to clean files and find approprite folders to save the output
+        Use DicomCaretaker to clean files and find approprite folders
+        to save the output
     '''
     try:
         name = os.path.basename(working_file)
@@ -189,6 +200,7 @@ def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
         log(failure_message)
     return dicom_folders
 
+
 def zip_folder(dicom_folders: list, zip_dir: str, log: Lumberjack) -> None:
     '''
         Zip folders with cleaned DICOM images and
@@ -203,6 +215,7 @@ def zip_folder(dicom_folders: list, zip_dir: str, log: Lumberjack) -> None:
         os.system("mv {}.zip {}".format(folder, zip_dir))
         move_zip_message = "{} moved to {}".format(folder, zip_dir)
         log(move_zip_message)
+
 
 def main(args):
     if not args[CONFIG_PATH]:
@@ -241,7 +254,9 @@ def main(args):
             log_path = os.path.join(out_dir, 'log.txt')
             log = Lumberjack(log_path, verbose)
             parent_file = os.path.join(in_root, io_pair['input'])
-            dicom_folders = walk_directory(parent_file, out_dir, zip_dir, modifications, id_pairs, dicom_folders, log)
+            dicom_folders = walk_directory(parent_file, out_dir, zip_dir,
+                                           modifications, id_pairs,
+                                           dicom_folders, log)
 
     else:
         # Loop through ISOs and subdirectories
@@ -250,10 +265,13 @@ def main(args):
         check_directory(out_dir)
         log_path = os.path.join(out_dir, 'log.txt')
         log = Lumberjack(log_path, verbose)
-        dicom_folders = walk_directory(parent_file, out_dir, zip_dir, modifications, id_pairs, dicom_folders, log)
+        dicom_folders = walk_directory(parent_file, out_dir, zip_dir,
+                                       modifications, id_pairs, dicom_folders,
+                                       log)
 
     if zip_dir:
         zip_folder(dicom_folders, zip_dir, log)
+
 
 if __name__ == '__main__':
     args = docopt(docstr)
