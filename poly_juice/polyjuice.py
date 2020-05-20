@@ -24,6 +24,8 @@ import shutil
 import yaml
 import time
 import csv
+import pydicom
+from pydicom import dcmread
 from docopt import docopt
 from poly_juice.lumberjack import Lumberjack
 from poly_juice.filch import DicomCaretaker
@@ -59,12 +61,47 @@ def check_directory(out_dir: str) -> None:
         except Exception as e:
             raise e
 
+
+def check_mag_field(editor: DicomCaretaker, output_file, value, log: Lumberjack) -> str:
+
+    ds = dcmread(output_file)
+
+    try:
+        name = os.path.basename(output_file)
+        working_message = "Ajusting header on {}".format(name)
+        log(working_message)
+
+        if ds.MagneticFieldStrength is not None:
+            value = ds.MagneticFieldStrength
+    except Exception:
+        ds.MagneticFieldStrength = value
+        ds.save_as(output_file)
+
+    return value
+
+
+def identify_output(editor: DicomCaretaker, working_file: str, out_dir: str, log: Lumberjack) -> str:
+
+    name = os.path.basename(working_file)
+    with open(working_file, 'rb') as working_file:
+        working_message = "Working on {}".format(name)
+        log(working_message)
+        image = DicomImage(working_file)
+        folder_name = editor.get_folder_name(image)
+        identified_folder = os.path.join(out_dir, folder_name)
+
+        output_name = os.path.join(identified_folder, name)
+
+    return output_name
+
+
 def walk_directory(parent_file: str, out_dir: str, zip_dir: str, modifications: dict,
                     id_pairs: dict, dicom_folders: list, log: Lumberjack) -> list:
     '''
         Walk through directories and send individual files to be cleaned.
     '''
     editor = DicomCaretaker()
+    mag_field = ''
 
     if os.path.isfile(parent_file):
         try:
@@ -77,9 +114,11 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str, modifications: 
             else:
                 # Send file to be cleaned
                 first_file = parent_file
+                output_file = identify_output(editor, parent_file, out_dir, log)
                 dicom_folders = clean_files(editor, parent_file, out_dir,
                                     first_file,
                                     modifications, id_pairs, dicom_folders, log)
+                mag_field = check_mag_field(editor, output_file, mag_field, log)
         except Exception as e:
             print("{} failed".format(parent_file))
             print (str(e))
@@ -103,9 +142,11 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str, modifications: 
                         editor.unmount_iso()
                     else:
                         # Send file to be cleaned
+                        output_file = identify_output(editor, working_file, out_dir, log)
                         dicom_folders = clean_files(editor, working_file, out_dir,
                                             first_file,
                                             modifications, id_pairs, dicom_folders, log)
+                        mag_field = check_mag_field(editor, output_file, mag_field, log)
 
                 except Exception as e:
                     print("{} failed".format(name))
@@ -114,8 +155,8 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str, modifications: 
                     log(failure_message)
     return dicom_folders
 
-def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,    
-                first_file,
+def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
+                first_file: str,
                 modifications: dict, id_pairs: dict, dicom_folders: list,
                 log: Lumberjack) -> list:
     '''
@@ -133,8 +174,8 @@ def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
             folder_name = editor.get_folder_name(image)
             identified_folder = os.path.join(out_dir, folder_name)
 
-            check = os.path.join(identified_folder, name)
-            if first_file == check:
+            check = os.path.join(folder_name, name)
+            if check in first_file:
                 check_directory(identified_folder)
                 dicom_folders.append(identified_folder)
 
