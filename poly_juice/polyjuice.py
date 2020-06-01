@@ -79,18 +79,24 @@ def check_mag_field(editor: DicomCaretaker, output_file, value,
     except Exception:
         ds.MagneticFieldStrength = value
         ds.save_as(output_file)
+        log("MagneticFieldStrength added for {}".format(name))
 
     return value
 
 
 def identify_output(editor: DicomCaretaker, working_file: str, out_dir: str,
-                    log: Lumberjack) -> str:
+                    id_pairs: dict, log: Lumberjack) -> str:
 
     name = os.path.basename(working_file)
     with open(working_file, 'rb') as working_file:
         working_message = "Working on {}".format(name)
         log(working_message)
         image = DicomImage(working_file)
+
+        id_issue = image.update_patient_id(id_pairs, log)
+        if id_issue:
+            editor.report_id(id_issue, log)
+
         folder_name = editor.get_folder_name(image)
         identified_folder = os.path.join(out_dir, folder_name)
 
@@ -120,7 +126,8 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
             else:
                 # Send file to be cleaned
                 first_file = parent_file
-                output_file = identify_output(editor, parent_file, out_dir, log)
+                output_file = identify_output(editor, parent_file, out_dir,
+                                              id_pairs, log)
                 dicom_folders = clean_files(editor, parent_file, out_dir,
                                             first_file, modifications,
                                             id_pairs, dicom_folders, log)
@@ -151,7 +158,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                     else:
                         # Send file to be cleaned
                         output_file = identify_output(editor, working_file,
-                                                      out_dir, log)
+                                                      out_dir, id_pairs, log)
                         dicom_folders = clean_files(editor, working_file, out_dir,
                                                     first_file, modifications,
                                                     id_pairs, dicom_folders, log)
