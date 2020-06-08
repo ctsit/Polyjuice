@@ -22,6 +22,22 @@ REDCap project fields.
 Polyjuice works on OSX and Linux.
 Use with Python 3.
 
+## Setting up the environment
+
+While running polyjuice, make sure a virtual environment is activated in the
+command terminal by navigating into the polyjuice directory and running the
+command:
+
+`python3 -m venv venv`
+`source venv/bin/activate`
+
+During the first-time setup, within the polyjuice directory you also need to
+run:
+
+`python setup.py`
+
+This will install polyjuice's package dependencies.
+
 ## Using polyjuice
 
 `python polyjuice.py /my/path/to/input/folder /my/path/to/output/folder`
