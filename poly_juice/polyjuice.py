@@ -140,13 +140,13 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
 
     else:
         for path, subdirs, files in os.walk(parent_file):
+            first_file = ''
             for name in files:
                 path_message = os.path.join(path, name)
                 log(path_message)
                 try:
                     check_file_type = os.path.join(path, name)
                     working_file = os.path.join(path, name)
-                    first_file = next((os.path.join(path, f) for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))))
                     if check_file_type.endswith(".iso"):
                         # Mount and Unmount ISO
                         new_parent_dir = editor.mount_iso(working_file, out_dir)
@@ -159,6 +159,8 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                         # Send file to be cleaned
                         output_file = identify_output(editor, working_file,
                                                       out_dir, id_pairs, log)
+                        if first_file == '':
+                            first_file = working_file
                         dicom_folders = clean_files(editor, working_file, out_dir,
                                                     first_file, modifications,
                                                     id_pairs, dicom_folders, log)
