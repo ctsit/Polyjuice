@@ -21,6 +21,29 @@ Example
 
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
+##[2.1.0] 2020-06-17
+### Summary
+ * The requirements file was update to make use of the latest pydicom version. This lead to pydicom references needing update throughout the program. Also, handling for ids.csv file was enhanced to allow skipping if no IDs specified so that a directory if dicom files could be processed without subject ID renaming.
+
+### Fixed
+  * Typos in config.yaml
+
+### Changed
+ * Example config.yaml file to reflect DICOM fields to exclude from modification.
+ * Unit tests for zip capabilities
+ * Ability to create output folders is they don't exist
+ 
+ ### Added
+ * Function to add missing MagneticFieldStrength to DICOM header as per NACC feedback
+
+##[2.0.0] 2019-11-14
+### Summary
+ * In this release, the function names were updated to removed references to Harry Potter. Additionally, this release includes work to upgrade from Python 2 to 3.
+
+### Changed
+ * Python 2 nomenclature to Python 3
+ * Renamed function names 
+
 ##[1.0.0] 2018-05-18
 ### Summary
  * The requirements file was update to make use of the latest pydicom version. This lead to pydicom references needing update throughout the program. Also, handling for ids.csv file was enhanced to allow skipping if no IDs specified so that a directory if dicom files could be processed without subject ID renaming.
