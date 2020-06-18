@@ -5,10 +5,12 @@ import os.path
 import shutil
 import yaml
 import csv
+import pydicom
+from pydicom import dcmread
 from docopt import docopt
-from lumberjack import Lumberjack
-from filch import DicomCaretaker
-from dicom_image import DicomImage
+from poly_juice.lumberjack import Lumberjack
+from poly_juice.filch import DicomCaretaker
+from poly_juice.dicom_image import DicomImage
 
 docstr = """
 Polyjuice
@@ -69,7 +71,7 @@ def check_mag_field(editor: DicomCaretaker, output_file, value,
 
     try:
         name = os.path.basename(output_file)
-        working_message = "Ajusting header on {}".format(name)
+        working_message = "Checking header on {}".format(name)
         log(working_message)
 
         if ds.MagneticFieldStrength is not None:
@@ -184,8 +186,6 @@ def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
     try:
         name = os.path.basename(working_file)
         with open(working_file, 'rb') as working_file:
-            working_message = "Working on {}".format(name)
-            log(working_message)
             image = DicomImage(working_file)
 
             editor.scrub(image, modifications, id_pairs, log)
@@ -227,7 +227,7 @@ def zip_folder(dicom_folders: list, zip_dir: str, log: Lumberjack) -> None:
 
 def main(args):
     if not args[CONFIG_PATH]:
-        args[CONFIG_PATH] = 'config.yaml'
+        args[CONFIG_PATH] = 'poly_juice/config.yaml'
 
     config = get_config(args[CONFIG_PATH])
     modifications = config.get('modifications')

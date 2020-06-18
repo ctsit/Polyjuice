@@ -7,6 +7,7 @@ import csv
 
 class DicomCaretaker(object):
     is_iso = False
+    # TODO: figure out what the mount location is for and why it has a placeholder name that is not configurable
     mount_location = "myrtles_bathroom"
     unknown_ids = []
 
