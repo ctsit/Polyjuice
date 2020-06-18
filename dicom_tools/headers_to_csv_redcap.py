@@ -23,12 +23,16 @@ def search_directory(parent_file: str, out_dir: str, dicom_folders: list, writer
 
     else:
         for path, dirs, files in os.walk(parent_file):
+            first_file = ''
             for name in files:
                 try:
                     working_file = os.path.join(path, name)
+                    ds = dcmread(working_file)
                     # Send files to be read
-                    first_file = next((os.path.join(path, f) for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))))
+                    if first_file == '':
+                        first_file = working_file
                     if first_file == working_file:
+                        print("Working on {}".format(working_file))
                         read_files(working_file, writer)
                 except Exception as e:
                     print("{} failed".format(name))
