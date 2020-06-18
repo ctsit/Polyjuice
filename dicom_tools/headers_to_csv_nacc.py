@@ -12,7 +12,7 @@ def convert_tuple_to_dict(tup, di):
     return di
 
 
-def search_directory(parent_file: str, out_dir: str, dicom_folders: list, writer) -> list:
+def search_directory(parent_file: str, out_dir: str, dicom_folders: list, writer):
     if os.path.isfile(parent_file):
         try:
             # Send files to be read
