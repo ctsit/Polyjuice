@@ -1,5 +1,7 @@
 * Integrate progress bar
 
+* Add a 'less verbose' option that identifies when files are opened and where the modified files are saved / the error that polyjuice encounters
+
 * Have polyjuice read Ignore list
 
 * [maybe] Rename files numerically

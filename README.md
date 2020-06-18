@@ -4,8 +4,8 @@ polyjuice
 Polyjuice is a modification of pydicom meant to anonymize DICOM images in a
 specific directory by scrubbing or changing their header information. It then
 saves the images in another specified directory in order to preserve the
-original data, and is also capable of archiving the images into compressed
-.zip files.
+original data, and is also capable of archiving the scrubbed images into
+compressed .zip files.
 
 The input and output locations, and the headers that are edited, are all
 included in the config.yaml file. The default settings for the config file are
@@ -28,41 +28,52 @@ While running polyjuice, make sure a virtual environment is activated in the
 command terminal by navigating into the polyjuice directory and running the
 command:
 
-`python3 -m venv venv`
+`python3 -m venv venv` (for first-time setup)
 `source venv/bin/activate`
 
 During the first-time setup, within the polyjuice directory you also need to
 run:
 
-`python setup.py`
+`pip install -e .`
 
 This will install polyjuice's package dependencies.
 
 ## Using polyjuice
 
-`python polyjuice.py /my/path/to/input/folder /my/path/to/output/folder`
+Open the `config.yaml.example` file within the `poly_juice/` folder. Make sure
+your settings are specified and save it as `config.yaml`. 
 
 You can view polyjuice usage in the terminal with the `-h` or `--help` flag.
 
 There are two ways to use polyjuice:
 
-1. Write the input and output paths in the terminal.
+1. Write the input and output paths in the terminal:
+`python poly_juice/polyjuice.py /my/path/to/input/folder /my/path/to/output/folder`
 
-2. Write the input and output paths in the config file.
+2. Write the input and output paths in the config file:
+`python poly_juice/polyjuice.py -c`
 
-If you use the second option, you must use the `-c` or `--config` flag.
-The config file also allows you to choose the location for .zip files and the
-list of IDs that need to be updated.
+If you use the second option, you can use either the `-c` or `--config` flag.
+The default config file is `config.yaml` within the `poly_juice/` folder, but
+another can be specified by naming it after the `-c` flag:
+`python poly_juice/polyjuice.py -c /path/to/config.yaml`
 
-You can also use the `-z` or `--zip` flag to archive the output folders. The
+The config file allows you to choose the location for .zip files and the
+list of any IDs that need to be updated.
+
+You can use the `-z` or `--zip` flag to archive the output folders. The
 desired location of your archived files is written in the config file.
+
+For more detailed information about polyjuice's progress, use the `-v` or
+`--verbose` flag.
 
 Note that neither the output directory nor the archive directory need exist
 before running the program. If they do not exist, Polyjuice will make them for
 you.
 
 If a file does not have the 'DICM' marker, it will fail. If a file you need to
-read is failing, you can add `force=True` on `read_file` (in dicom_image).
+read is failing, you can add `force=True` on `read_file` (in
+`poly_juice/dicom_image.py`).
 
 `self._dataset = dicom.read_file(dicom_file, force=True)`
 
