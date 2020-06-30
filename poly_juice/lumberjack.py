@@ -1,6 +1,7 @@
 import datetime
 import os.path
 
+
 class Lumberjack(object):
     def __init__(self, filepath='log.txt', is_verbose=None):
         self.is_verbose = is_verbose
@@ -16,7 +17,6 @@ class Lumberjack(object):
         time_message = sep + " " + timestamp + " " + sep
         self.__call__(time_message)
         self.__call__(sep * 4)
-
 
     def __call__(self, message):
         with open(self.log_path, "a+") as log:
