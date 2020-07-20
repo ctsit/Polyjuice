@@ -21,6 +21,40 @@ Example
 
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
+##[2.2.0] 2020-07-20
+### Summary
+* In this release, the NACC required headers were setup in the config example file and further logic was added to update the dicome tool behavior.
+
+### Added
+* Add more logic to 'first_file' choice in headers_to_csv_redcap.py (Samantha Emerson)
+
+### Changed
+* Adjust config example file to leave important headers untouched (Samantha Emerson)
+* Remove typing of non-returned search_directory function in dicom_tools files (Samantha Emerson)
+
+##[2.1.0] 2020-06-17
+### Summary
+ * The requirements file was update to make use of the latest pydicom version. This lead to pydicom references needing update throughout the program. Also, handling for ids.csv file was enhanced to allow skipping if no IDs specified so that a directory if dicom files could be processed without subject ID renaming.
+
+### Fixed
+  * Typos in config.yaml
+
+### Changed
+ * Example config.yaml file to reflect DICOM fields to exclude from modification.
+ * Unit tests for zip capabilities
+ * Ability to create output folders is they don't exist
+
+ ### Added
+ * Function to add missing MagneticFieldStrength to DICOM header as per NACC feedback
+
+##[2.0.0] 2019-11-14
+### Summary
+ * In this release, the function names were updated to removed references to Harry Potter. Additionally, this release includes work to upgrade from Python 2 to 3.
+
+### Changed
+ * Python 2 nomenclature to Python 3
+ * Renamed function names
+
 ##[1.0.0] 2018-05-18
 ### Summary
  * The requirements file was update to make use of the latest pydicom version. This lead to pydicom references needing update throughout the program. Also, handling for ids.csv file was enhanced to allow skipping if no IDs specified so that a directory if dicom files could be processed without subject ID renaming.
@@ -30,7 +64,7 @@ Example
 
 ### Changed
  * Requirements for program to return
- * Pydicom version 
+ * Pydicom version
 
 ##[0.2.0]
  * Fix id_pairs bug
