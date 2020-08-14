@@ -7,6 +7,9 @@ from poly_juice.lumberjack import Lumberjack
 
 
 class TestZipFolder(unittest.TestCase):
+    """
+    This test makes sure that the processed folders are successfully zipped.
+    """
 
     def setUp(self):
         self.directory = os.path.dirname('tests/testOutput/')

@@ -6,6 +6,7 @@ import pydicom
 from pydicom import dcmread
 from pathlib import Path
 from poly_juice.polyjuice import clean_files
+from poly_juice.polyjuice import check_mag_field
 from poly_juice.lumberjack import Lumberjack
 from poly_juice.filch import DicomCaretaker
 
@@ -28,9 +29,9 @@ class TestFileCleaner(unittest.TestCase):
     def setUp(self):
         self.args = Flags()
         self.editor = DicomCaretaker()
-        self.working_file = 'tests/testInput/mri/101_01_01_2010/1'
+        self.working_file = 'tests/testInput/MRI/101_01_01_2010/1'
         self.out_dir = 'tests/testOutput/'
-        self.first_file = 'tests/testInput/mri/101_01_01_2010/1'
+        self.first_file = 'tests/testInput/MRI/101_01_01_2010/1'
         self.modifications = make_config()
         self.id_pairs = {'PATIENT_ID': 'UPDATE_ID'}
         self.dicom_folders = ['tests/testOutput/mri', 'tests/testOutput/pet']
@@ -71,7 +72,7 @@ class TestFileCleaner(unittest.TestCase):
             'MagneticFieldStrength': pydicom.valuerep.DSfloat("3")
             }
 
-        clean_files(self.editor, self.working_file, self.out_dir, self.first_file,  self.modifications, self.id_pairs, self.dicom_folders, self.log)
+        clean_files(self.editor, self.working_file, self.out_dir, self.first_file, self.modifications, self.id_pairs, self.dicom_folders, self.log)
 
         if os.path.isfile('tests/testOutput/101_01_01_2010/1'):
             output_file = 'tests/testOutput/101_01_01_2010/1'
@@ -84,6 +85,28 @@ class TestFileCleaner(unittest.TestCase):
         result = dict(data)
 
         self.assertDictEqual(expected, result)
+
+    def test_mag_field_get(self):
+        output_file = 'tests/testOutput/101_01_01_2010/1'
+        mag_field = ''
+
+        expected = float('3')
+        result = check_mag_field(self.editor, output_file, mag_field, self.log)
+
+        self.assertEqual(expected, result)
+
+    def test_mag_field_replace(self):
+        # checks to make sure that, when check_mag_field is given a dicom image with no MagneticFieldStrength header info, it uses its stored value to fill in the missing info.
+
+        output_file = 'tests/testOutput/101_01_01_2010/1'
+        ds = dcmread(output_file)
+        ds.MagneticFieldStrength = ''
+        mag_field = '3'
+
+        expected = float('3')
+        result = check_mag_field(self.editor, output_file, mag_field, self.log)
+
+        self.assertEqual(expected, result)
 
 
 def make_config() -> dict:
