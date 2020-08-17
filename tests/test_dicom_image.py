@@ -11,7 +11,8 @@ from poly_juice.dicom_image import DicomImage
 
 class TestDicomImage(unittest.TestCase):
     """
-    These tests examine polyjuice's functionality for collecting and updating PatientID header info if there is a match within the file
+    These tests examine polyjuice's functionality for collecting and updating
+    PatientID header info, if there is a match within the file.
     """
 
     def setUp(self):
@@ -20,7 +21,7 @@ class TestDicomImage(unittest.TestCase):
         self.out_dir = 'tests/testOutput/'
         self.modifications = make_config()
         self.id_pairs = {'PATIENT_ID': 'UPDATE_ID'}
-        self.dicom_folders = ['tests/testOutput/mri', 'tests/testOutput/pet']
+        self.dicom_folders = ['', '']
         self.log = Lumberjack()
 
         self.directory = os.path.dirname('tests/testOutput/')
@@ -31,7 +32,9 @@ class TestDicomImage(unittest.TestCase):
         self.output = os.path.dirname('tests/testOutput/102_01_01_2010/1')
         if not os.path.exists(self.output):
             os.makedirs('tests/testOutput/102_01_01_2010/')
-            clean_files(self.editor, self.working_file, self.out_dir, self.working_file, self.modifications, self.id_pairs, self.dicom_folders, self.log)
+            clean_files(self.editor, self.working_file, self.out_dir,
+                        self.working_file, self.modifications, self.id_pairs,
+                        self.dicom_folders, self.log)
 
     def test_get_value(self):
         dcm_file = 'tests/testOutput/102_01_01_2010/1'
@@ -58,7 +61,6 @@ class TestDicomImage(unittest.TestCase):
             result = test_image.get_value(key)
 
         self.assertEqual(expected, result)
-        pass
 
     def test_update_patient_id(self):
         id_update = {'102': '202'}

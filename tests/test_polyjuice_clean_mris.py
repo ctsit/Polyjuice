@@ -2,6 +2,7 @@ import unittest
 
 import os
 import os.path
+import shutil
 import pydicom
 from pydicom import dcmread
 from pathlib import Path
@@ -34,7 +35,7 @@ class TestFileCleaner(unittest.TestCase):
         self.first_file = 'tests/testInput/MRI/101_01_01_2010/1'
         self.modifications = make_config()
         self.id_pairs = {'PATIENT_ID': 'UPDATE_ID'}
-        self.dicom_folders = ['tests/testOutput/mri', 'tests/testOutput/pet']
+        self.dicom_folders = ['', '']
         self.log = Lumberjack()
 
         self.directory = os.path.dirname('tests/testOutput/')
@@ -45,10 +46,11 @@ class TestFileCleaner(unittest.TestCase):
             os.makedirs(self.mri)
 
     def test_for_cleaned_file(self):
-
         expected = self.modifications
 
-        clean_files(self.editor, self.working_file, self.out_dir, self.first_file, self.modifications, self.id_pairs, self.dicom_folders, self.log)
+        clean_files(self.editor, self.working_file, self.out_dir,
+                    self.first_file, self.modifications, self.id_pairs,
+                    self.dicom_folders, self.log)
 
         Path('tests/testOutput/101_01_01_2010/1').touch()
         output_file = 'tests/testOutput/101_01_01_2010/1'
@@ -72,13 +74,14 @@ class TestFileCleaner(unittest.TestCase):
             'MagneticFieldStrength': pydicom.valuerep.DSfloat("3")
             }
 
-        clean_files(self.editor, self.working_file, self.out_dir, self.first_file, self.modifications, self.id_pairs, self.dicom_folders, self.log)
+        clean_files(self.editor, self.working_file, self.out_dir,
+                    self.first_file, self.modifications, self.id_pairs,
+                    self.dicom_folders, self.log)
 
         if os.path.isfile('tests/testOutput/101_01_01_2010/1'):
             output_file = 'tests/testOutput/101_01_01_2010/1'
         else:
             print("Output file not created.")
-            pass
 
         ds = dcmread(output_file)
         data = get_intact_results(ds)
@@ -96,8 +99,6 @@ class TestFileCleaner(unittest.TestCase):
         self.assertEqual(expected, result)
 
     def test_mag_field_replace(self):
-        # checks to make sure that, when check_mag_field is given a dicom image with no MagneticFieldStrength header info, it uses its stored value to fill in the missing info.
-
         output_file = 'tests/testOutput/101_01_01_2010/1'
         ds = dcmread(output_file)
         ds.MagneticFieldStrength = ''
@@ -107,6 +108,12 @@ class TestFileCleaner(unittest.TestCase):
         result = check_mag_field(self.editor, output_file, mag_field, self.log)
 
         self.assertEqual(expected, result)
+
+    @classmethod
+    def tearDownClass(self):
+        if os.path.exists('tests/testOutput/101_01_01_2010'):
+            shutil.rmtree('tests/testOutput/101_01_01_2010')
+            print("Successfully removed tests/testOutput/101_01_01_2010")
 
 
 def make_config() -> dict:

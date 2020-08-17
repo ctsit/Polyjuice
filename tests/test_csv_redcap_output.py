@@ -3,13 +3,13 @@ import unittest
 import csv
 import os
 import os.path
-from dicom_tools.headers_to_csv_redcap import make_csv
 from dicom_tools.headers_to_csv_redcap import read_files
 
 
 class TestRedcapOutput(unittest.TestCase):
     """
-    This series of tests checks the functionality of dicom_tools/headers_to_csv_redcap.py
+    This series of tests checks the functionality of
+    dicom_tools/headers_to_csv_redcap.py
     """
 
     def test_read_mri(self):
@@ -96,7 +96,7 @@ class TestRedcapOutput(unittest.TestCase):
 
     def tearDown(self):
         os.remove('tests/testOutput/output.csv')
-        print("tearDown was successful, ready for next test round.")
+        print("Successfully removed tests/testOutput/output.csv")
 
 
 def make_fieldnames():
@@ -152,6 +152,7 @@ def collect_results(row):
     result['imaging_metadata_complete'] = row['imaging_metadata_complete']
 
     return result
+
 
 if __name__ == "__main__":
     unittest.main()

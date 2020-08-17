@@ -1,11 +1,12 @@
-# These tests examine filch.py. One thing to keep in mind while testing filch is that a lot of these functions appear within polyjuice itself and are used as part of test_polyjuice_clean_mris.py
-
 import unittest
 
 import os
 import os.path
+import shutil
+from pydicom import dcmread
 from poly_juice.filch import DicomCaretaker
 from poly_juice.polyjuice import clean_files
+from poly_juice.polyjuice import check_directory
 from poly_juice.dicom_image import DicomImage
 from poly_juice.lumberjack import Lumberjack
 
@@ -20,7 +21,11 @@ class Flags():
 
 
 class TestFilch(unittest.TestCase):
-
+    '''
+    These tests examine filch.py. One thing to keep in mind while testing filch
+    is that a lot of these functions appear within polyjuice itself and are
+    used as part of test_polyjuice_clean_mris.py
+    '''
     def setUp(self):
 
         self.args = Flags()
@@ -40,29 +45,39 @@ class TestFilch(unittest.TestCase):
         self.output = os.path.dirname('tests/testOutput/102_01_01_2010/1')
         if not os.path.exists(self.output):
             os.makedirs('tests/testOutput/102_01_01_2010/')
-            clean_files(self.editor, self.working_file, self.out_dir, self.working_file, self.modifications, self.id_pairs, self.dicom_folders, self.log)
+            clean_files(self.editor, self.working_file, self.out_dir,
+                        self.working_file, self.modifications, self.id_pairs,
+                        self.dicom_folders, self.log)
 
+    @unittest.skip("Unsure what mount_iso does or if it has something to test")
     def test_mount_iso(self):
         # result = DicomCaretaker.mount_iso(iso_path, out)
         # returns mount_point
         pass
 
+    @unittest.skip("This function is also tested in test_polyjuice_clean_mris.py, within a larger function")
     def test_scrub(self):
-        # this test is run more comprehensively in test_polyjuice_clean_mris.py . do i want to keep it in anyway, for the sake of showing that i'm testing each filch function?
         dcm_image = 'tests/testOutput/102_01_01_2010/1'
         editor = DicomCaretaker()
+        log = Lumberjack()
+        modifications = make_config()
+        expected = modifications
+        id_pairs = {'': ''}
 
-        # editor.scrub(image, modifications, id_pairs, log)
-        # result = check output file values
+        with open(dcm_image, 'rb') as working_file:
+            test_image = DicomImage(working_file)
+            editor.scrub(test_image, modifications, id_pairs, log)
 
-        # self.assertEqual(expected, result)
-        pass
+        ds = dcmread(dcm_image)
+        data = get_output_results(ds)
+        result = dict(data)
 
+        self.assertDictEqual(expected, result)
+
+    @unittest.skip("Unsure what report_id actually reports- it's not IDs that are missing, because it reports IDs that are not missing, and also files that are missing IDs are skipped with an error.")
     def test_report_id(self):
-        # it looks like this function creates a csv file with a list of ids with "issues". what constitutes an issue seems to be not working properly, because polyjuice frequently prints this file with a list of just ids that were processed that didn't happen to be in the ids.csv file.
-        # actually i'm not sure what it's even trying to report here- if there's a "Missing ID" then the output folder can't be created and there's an error anyway?
-        dcm_image = 'tests/testOutput/102_01_01_2010/1'
-        editor = DicomCaretaker()
+        # dcm_image = 'tests/testOutput/102_01_01_2010/1'
+        # editor = DicomCaretaker()
 
         # editor.report_id(id_issue, log)
         # result = check self.unknown_ids (a list within DicomCaretaker)
@@ -70,7 +85,10 @@ class TestFilch(unittest.TestCase):
         pass
 
     def test_get_folder_name(self):
-        # this function collects the output folder's name by finding and properly formatting a string made out of the patient's id and study date, using the dicom's header info
+        ''' This function collects the output folder's name by finding and
+        properly formatting a string made out of the patient's ID and study
+        date, using the dicom's header info.
+        '''
         dcm_image = 'tests/testOutput/102_01_01_2010/1'
         editor = DicomCaretaker()
         expected = '102_01_01_2010'
@@ -84,38 +102,51 @@ class TestFilch(unittest.TestCase):
     def test_save_output(self):
         dcm_image = 'tests/testOutput/102_01_01_2010/1'
         editor = DicomCaretaker()
+        output_folder = 'tests/testOutput/test_save_output'
+        filename = '1'
 
-        # editor.save_output(image, identified_folder, filename)
-        # result = check to see if the folder is there
-        # self.assertEqual(expected, result)
-        pass
+        with open(dcm_image, 'rb') as working_file:
+            test_image = DicomImage(working_file)
+            check_directory(output_folder)
+            editor.save_output(test_image, output_folder, filename)
 
+            result = os.path.exists('tests/testOutput/test_save_output/1')
+
+        self.assertTrue(result)
+
+    @unittest.skip("Not sure if these iso functions can easily be tested- placeholder for future.")
     def test_unmount_iso(self):
         # DicomCaretacker.unmount_iso()
-        # result = see if the iso is unmounted? not sure if i can easily test these iso functions
+        # result = see if the iso is unmounted?
         pass
 
     def tearDown(self):
-        pass
+        if os.path.exists('tests/testOutput/test_save_output'):
+            shutil.rmtree('tests/testOutput/test_save_output')
+            print("Successfully deleted testOutput/test_save_output")
+
+    @classmethod
+    def tearDownClass(self):
+        if os.path.exists('tests/testOutput/102_01_01_2010'):
+            shutil.rmtree('tests/testOutput/102_01_01_2010')
+            print("Successfully deleted testOutput/102_01_01_2010")
 
 
 def make_config() -> dict:
     modifications = {
-        # Commented terms should be skipped by clean_files
-        # 'StudyDate': '',
-        # 'Manufacturer': '',
-        # 'SeriesDescription': '',
-        # 'ManufacturersModelName': '',
-        # 'PatientID': '',
-        # 'StudyInstanceUID': '',
-        # 'SeriesInstanceUID': '',
-        # 'InstanceNumber': '',
         'ReferringPhysicianName': '',
         'PatientName': 'Anonymous',
         'PatientBirthDate': '19010101',
-        # 'MagneticFieldStrength': '',
     }
     return modifications
+
+
+def get_output_results(ds):
+    return (
+            ["ReferringPhysicianName", ds.get("ReferringPhysicianName", "Value")],
+            ["PatientName", ds.get("PatientName", "Value")],
+            ["PatientBirthDate", ds.get("PatientBirthDate", "Value")],
+        )
 
 
 if __name__ == "__main__":
