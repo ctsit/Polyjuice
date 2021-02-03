@@ -232,9 +232,8 @@ def main(args):
     config = get_config(args[CONFIG_PATH])
     modifications = config.get('modifications')
 
-    try:
-        reset_IDS = config.get('new_IDs')
-    except Exception:
+    reset_IDS = config.get('new_IDs')
+    if reset_IDS is None:
         reset_IDS = 'poly_juice/ids.csv'
     try:
         with open(reset_IDS, mode='r') as in_oldIDfile:
