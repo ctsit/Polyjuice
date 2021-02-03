@@ -21,6 +21,15 @@ Example
 
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
+##[2.3.0] 2021-02-03
+### Summary
+* This release adds more unit tests and adds a default ids.csv file to avoid
+errors for new installs.
+
+### Added
+* Default "ids.csv" file to simplify setup and add unit tests to polyjuice (Samantha Emerson)
+* Unit tests (Samantha Emerson)
+
 ##[2.2.0] 2020-07-20
 ### Summary
 * In this release, the NACC required headers were setup in the config example file and further logic was added to update the dicome tool behavior.
