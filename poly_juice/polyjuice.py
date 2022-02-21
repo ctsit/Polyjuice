@@ -136,6 +136,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                                             id_pairs, dicom_folders, log)
                 mag_field = check_mag_field(editor, output_file, mag_field, log)
         except Exception as e:
+            ipdb.set_trace()
             print("{} failed".format(parent_file))
             print(str(e))
             failure_message = "{} failed".format(parent_file) + "\n" + str(e)
@@ -145,26 +146,31 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
         for path, subdirs, files in os.walk(parent_file):
             first_file = ''
             # ipdb.set_trace()
-            # if (len(files)) > 1:
-            #     # check_and_modify_folder_name(path)
+            if (len(files)) > 1:
+                # check_and_modify_folder_name(path)
 
-            #     editor = DicomCaretaker()
-            #     if not (editor.verify_folder_name(path)):
-            #         # Fix the filename
+                editor = DicomCaretaker()
+                if not (editor.verify_folder_name(path)):
+                    # Fix the filename
 
-            #         # Taking the first file from the folder
-            #         file_name = files[0]
+                    # Taking the first file from the folder
+                    file_name = files[0]
 
-            #         check_file_type = os.path.join(path, file_name)
-            #         working_file = os.path.join(path, file_name)
+                    check_file_type = os.path.join(path, file_name)
+                    working_file = os.path.join(path, file_name)
 
-            #         dicom_folders = clean_files(editor, working_file, out_dir,
-            #                                         first_file, modifications,
-            #                                         id_pairs, dicom_folders, log)
+                    new_name = path
 
-            #         image = DicomImage(working_file)
-            #         new_name = editor.get_folder_name(image)
-            #         os.rename(out_dir, new_name)
+                    with open(working_file, 'rb') as working_file:
+                        image = DicomImage(working_file)
+                        new_name = editor.get_folder_name(image)
+                        input_folder_name_array = path.split('/')
+                        input_folder_name_array[len(input_folder_name_array) - 1] = new_name
+                        delimiter = '/'
+                        new_folder_name = delimiter.join(input_folder_name_array)
+                    ipdb.set_trace()
+                    os.rename(path, new_folder_name)
+                    path = new_folder_name
 
 
             for name in files:
@@ -173,7 +179,6 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                 try:
                     check_file_type = os.path.join(path, name)
                     working_file = os.path.join(path, name)
-                    ipdb.set_trace()
                     if check_file_type.endswith(".iso"):
                         # Mount and Unmount ISO
                         new_parent_dir = editor.mount_iso(working_file,
@@ -185,7 +190,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                         editor.unmount_iso()
                     else:
                         # Send file to be cleaned
-                        ipdb.set_trace()
+                        # ipdb.set_trace()
                         output_file = identify_output(editor, working_file,
                                                       out_dir, id_pairs, log)
                         if first_file == '':
@@ -193,10 +198,11 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                         dicom_folders = clean_files(editor, working_file, out_dir,
                                                     first_file, modifications,
                                                     id_pairs, dicom_folders, log)
-                        ipdb.set_trace()
+                        # ipdb.set_trace()
                         mag_field = check_mag_field(editor, output_file, mag_field, log)
 
                 except Exception as e:
+                    ipdb.set_trace()
                     print("{} failed".format(name))
                     print(str(e))
                     failure_message = "{} failed".format(name) + "\n" + str(e)
@@ -233,6 +239,7 @@ def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
             log(saving_message)
 
     except Exception as e:
+        ipdb.set_trace()
         print("{} failed".format(name))
         failure_message = "{} failed".format(name) + "\n" + str(e)
         log(failure_message)
@@ -256,7 +263,6 @@ def zip_folder(dicom_folders: list, zip_dir: str, log: Lumberjack) -> None:
 
 
 def main(args):
-    ipdb.set_trace()
     if not args[CONFIG_PATH]:
         args[CONFIG_PATH] = 'poly_juice/config.yaml'
 
