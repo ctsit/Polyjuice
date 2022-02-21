@@ -169,8 +169,9 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                         delimiter = '/'
                         new_folder_name = delimiter.join(input_folder_name_array)
                     ipdb.set_trace()
-                    os.rename(path, new_folder_name)
-                    path = new_folder_name
+                    if not (os.path.exists(new_folder_name)):
+                        os.rename(path, new_folder_name)
+                        path = new_folder_name
 
 
             for name in files:
