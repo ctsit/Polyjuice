@@ -52,6 +52,13 @@ class DicomCaretaker(object):
         # Rename according to NACC conventions
         folder_name = patient_id + "_" + desired_study_date
         return folder_name
+
+    def validate_ptid(self, ptid, log):
+        if (len(ptid) != 6):
+            log("Incorrect folder name - wrong ptid {}".format(ptid))
+            return False
+        #  add other validations for ptid depending on Site#, Funding Suffix, Participant Number and Visit
+        return True
     
     def verify_folder_name(self, path, log):
         folder_name = path.split("/")[-1]
@@ -62,8 +69,7 @@ class DicomCaretaker(object):
         dd = folder_name_constituents[2]
         yyyy = folder_name_constituents[3]
 
-        if len(ptid) != 6:
-            log("Incorrect folder name - wrong ptid {}".format(ptid))
+        if (not self.validate_ptid(ptid, log)):
             return False
 
         if len(yyyy) != 4:
