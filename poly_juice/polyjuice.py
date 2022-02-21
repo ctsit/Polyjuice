@@ -144,13 +144,36 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
     else:
         for path, subdirs, files in os.walk(parent_file):
             first_file = ''
-            ipdb.set_trace()
+            # ipdb.set_trace()
+            # if (len(files)) > 1:
+            #     # check_and_modify_folder_name(path)
+
+            #     editor = DicomCaretaker()
+            #     if not (editor.verify_folder_name(path)):
+            #         # Fix the filename
+
+            #         # Taking the first file from the folder
+            #         file_name = files[0]
+
+            #         check_file_type = os.path.join(path, file_name)
+            #         working_file = os.path.join(path, file_name)
+
+            #         dicom_folders = clean_files(editor, working_file, out_dir,
+            #                                         first_file, modifications,
+            #                                         id_pairs, dicom_folders, log)
+
+            #         image = DicomImage(working_file)
+            #         new_name = editor.get_folder_name(image)
+            #         os.rename(out_dir, new_name)
+
+
             for name in files:
                 path_message = os.path.join(path, name)
                 log(path_message)
                 try:
                     check_file_type = os.path.join(path, name)
                     working_file = os.path.join(path, name)
+                    ipdb.set_trace()
                     if check_file_type.endswith(".iso"):
                         # Mount and Unmount ISO
                         new_parent_dir = editor.mount_iso(working_file,
@@ -162,6 +185,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                         editor.unmount_iso()
                     else:
                         # Send file to be cleaned
+                        ipdb.set_trace()
                         output_file = identify_output(editor, working_file,
                                                       out_dir, id_pairs, log)
                         if first_file == '':
@@ -232,7 +256,7 @@ def zip_folder(dicom_folders: list, zip_dir: str, log: Lumberjack) -> None:
 
 
 def main(args):
-    # ipdb.set_trace()
+    ipdb.set_trace()
     if not args[CONFIG_PATH]:
         args[CONFIG_PATH] = 'poly_juice/config.yaml'
 

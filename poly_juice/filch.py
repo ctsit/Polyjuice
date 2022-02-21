@@ -52,6 +52,18 @@ class DicomCaretaker(object):
         # Rename according to NACC conventions
         folder_name = patient_id + "_" + desired_study_date
         return folder_name
+    
+    def verify_folder_name(self, path):
+        folder_name = path.split("/")[-1]
+        folder_name_constituents = folder_name.split("_")
+
+        ptid = folder_name_constituents[0]
+        mm = folder_name_constituents[1]
+        dd = folder_name_constituents[2]
+        yyyy = folder_name_constituents[3]
+
+        # Temporary
+        return False
 
     def save_output(self, image, identified_folder, filename):
         output = os.path.join(identified_folder, filename)
