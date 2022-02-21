@@ -53,7 +53,7 @@ class DicomCaretaker(object):
         folder_name = patient_id + "_" + desired_study_date
         return folder_name
     
-    def verify_folder_name(self, path):
+    def verify_folder_name(self, path, log):
         folder_name = path.split("/")[-1]
         folder_name_constituents = folder_name.split("_")
 
@@ -62,8 +62,24 @@ class DicomCaretaker(object):
         dd = folder_name_constituents[2]
         yyyy = folder_name_constituents[3]
 
-        # Temporary
-        return False
+        if len(ptid) != 6:
+            log("Incorrect folder name - wrong ptid {}".format(ptid))
+            return False
+
+        if len(yyyy) != 4:
+            log("Incorrect folder name - wrong year {}".format(yyyy))
+            return False
+        
+        if (len(mm) != 2) or (mm > 12) or (mm < 1):
+            log("Incorrect folder name - wrong month {}".format(mm))
+            return False
+
+        if (len(dd) != 2) or (dd > 31) or (dd < 1):
+            log("Incorrect folder name - wrong date {}".format(dd))
+            return False
+
+        # All checks passed
+        return True
 
     def save_output(self, image, identified_folder, filename):
         output = os.path.join(identified_folder, filename)

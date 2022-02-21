@@ -147,31 +147,13 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
             first_file = ''
             # ipdb.set_trace()
             if (len(files)) > 1:
-                # check_and_modify_folder_name(path)
-
                 editor = DicomCaretaker()
                 if not (editor.verify_folder_name(path)):
-                    # Fix the filename
-
-                    # Taking the first file from the folder
-                    file_name = files[0]
-
-                    check_file_type = os.path.join(path, file_name)
-                    working_file = os.path.join(path, file_name)
-
-                    new_name = path
-
-                    with open(working_file, 'rb') as working_file:
-                        image = DicomImage(working_file)
-                        new_name = editor.get_folder_name(image)
-                        input_folder_name_array = path.split('/')
-                        input_folder_name_array[len(input_folder_name_array) - 1] = new_name
-                        delimiter = '/'
-                        new_folder_name = delimiter.join(input_folder_name_array)
-                    ipdb.set_trace()
-                    if not (os.path.exists(new_folder_name)):
-                        os.rename(path, new_folder_name)
-                        path = new_folder_name
+                    new_path = get_fixed_path_name(path, files[0], editor)
+                    
+                    if not (os.path.exists(new_path)):
+                        os.rename(path, new_path)
+                        path = new_path
 
 
             for name in files:
@@ -210,6 +192,21 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                     log(failure_message)
     # ipdb.set_trace()
     return dicom_folders
+
+
+
+def get_fixed_path_name(path: str, first_file: str, editor):
+    # Fix the filename
+
+    # Taking the first file from the folder
+    working_file = os.path.join(path, first_file)
+
+    with open(working_file, 'rb') as working_file:
+        image = DicomImage(working_file)
+        new_name = editor.get_folder_name(image)
+        input_folder_name_array = path.split('/')
+        input_folder_name_array[-1] = new_name
+        return "/".join(input_folder_name_array)
 
 
 def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
