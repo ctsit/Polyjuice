@@ -76,11 +76,11 @@ class DicomCaretaker(object):
             log("Incorrect folder name - wrong year {}".format(yyyy))
             return False
         
-        if (len(mm) != 2) or (mm > 12) or (mm < 1):
+        if (len(mm) != 2) or (int(mm) > 12) or (int(mm) < 1):
             log("Incorrect folder name - wrong month {}".format(mm))
             return False
 
-        if (len(dd) != 2) or (dd > 31) or (dd < 1):
+        if (len(dd) != 2) or (int(dd) > 31) or (int(dd) < 1):
             log("Incorrect folder name - wrong date {}".format(dd))
             return False
 
