@@ -11,6 +11,7 @@ from docopt import docopt
 from poly_juice.lumberjack import Lumberjack
 from poly_juice.filch import DicomCaretaker
 from poly_juice.dicom_image import DicomImage
+import ipdb
 
 docstr = """
 Polyjuice
@@ -113,6 +114,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
     '''
     editor = DicomCaretaker()
     mag_field = ''
+    # ipdb.set_trace()
 
     if os.path.isfile(parent_file):
         try:
@@ -126,6 +128,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
             else:
                 # Send file to be cleaned
                 first_file = parent_file
+                # ipdb.set_trace()
                 output_file = identify_output(editor, parent_file, out_dir,
                                               id_pairs, log)
                 dicom_folders = clean_files(editor, parent_file, out_dir,
@@ -141,6 +144,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
     else:
         for path, subdirs, files in os.walk(parent_file):
             first_file = ''
+            ipdb.set_trace()
             for name in files:
                 path_message = os.path.join(path, name)
                 log(path_message)
@@ -165,6 +169,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                         dicom_folders = clean_files(editor, working_file, out_dir,
                                                     first_file, modifications,
                                                     id_pairs, dicom_folders, log)
+                        ipdb.set_trace()
                         mag_field = check_mag_field(editor, output_file, mag_field, log)
 
                 except Exception as e:
@@ -172,6 +177,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                     print(str(e))
                     failure_message = "{} failed".format(name) + "\n" + str(e)
                     log(failure_message)
+    # ipdb.set_trace()
     return dicom_folders
 
 
@@ -226,6 +232,7 @@ def zip_folder(dicom_folders: list, zip_dir: str, log: Lumberjack) -> None:
 
 
 def main(args):
+    # ipdb.set_trace()
     if not args[CONFIG_PATH]:
         args[CONFIG_PATH] = 'poly_juice/config.yaml'
 

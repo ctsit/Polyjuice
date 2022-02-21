@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from fnmatch import fnmatch
 import os
 import os.path
 import csv
@@ -34,6 +35,10 @@ def search_directory(parent_file: str, out_dir: str, dicom_folders: list, writer
 
 
 def read_files(dcm_file, writer):
+    # if !verifyFolderTitleFormat(dcm_writer):
+    #     dcm_writer = rename_file(dcm_writer)
+    print("Inside read files of headers to csv nacc")
+
     ds = dcmread(dcm_file)
 
     data = (
@@ -79,3 +84,11 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# def verifyFolderTitleFormat(filename):
+#     return fnmatch(filename, '[0-9]*_.._.._....')
+
+# def rename_file(filename):
+#     if fnmatch(filename, '[0-9]*_.._.._..'):
+#         return os.rename(filename, )
+#     return os.rename(filename, get_new)
