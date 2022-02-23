@@ -69,10 +69,14 @@ class DicomCaretaker(object):
         folder_name = path.split("/")[-1]
         folder_name_constituents = folder_name.split("_")
 
-        ptid = folder_name_constituents[0]
-        mm = folder_name_constituents[1]
-        dd = folder_name_constituents[2]
-        yyyy = folder_name_constituents[3]
+        try:
+            ptid = folder_name_constituents[0]
+            mm = folder_name_constituents[1]
+            dd = folder_name_constituents[2]
+            yyyy = folder_name_constituents[3]
+        except Exception as e:
+            log(e)
+            return False
 
         if (not self.validate_ptid(ptid, log)):
             return False
