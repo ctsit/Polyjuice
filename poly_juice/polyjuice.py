@@ -144,7 +144,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
             if (len(files)) > 1:
                 editor = DicomCaretaker()
                 if not (editor.validate_folder_name(path, log)):
-                    new_path = get_fixed_path_name(path, files[0], editor)
+                    new_path = get_correct_path_name(path, files[0], editor)
                     
                     if (os.path.exists(new_path)):
                         error_msg = 'folder named {} already exists. skipping initial folder {}'.format(new_path, path)
@@ -190,7 +190,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
 
 
 
-def get_fixed_path_name(path: str, first_file: str, editor):
+def get_correct_path_name(path: str, first_file: str, editor):
     # Fix the filename
 
     # Taking the first file from the folder
