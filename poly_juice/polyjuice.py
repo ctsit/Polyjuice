@@ -143,7 +143,7 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
             first_file = ''
             if (len(files)) > 1:
                 editor = DicomCaretaker()
-                if not (editor.verify_folder_name(path, log)):
+                if not (editor.validate_folder_name(path, log)):
                     new_path = get_fixed_path_name(path, files[0], editor)
                     
                     if (os.path.exists(new_path)):

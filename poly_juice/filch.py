@@ -65,7 +65,7 @@ class DicomCaretaker(object):
 
         return True
     
-    def verify_folder_name(self, path, log):
+    def validate_folder_name(self, path, log):
         folder_name = path.split("/")[-1]
         folder_name_constituents = folder_name.split("_")
 
