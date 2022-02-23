@@ -146,7 +146,12 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                 if not (editor.verify_folder_name(path, log)):
                     new_path = get_fixed_path_name(path, files[0], editor)
                     
-                    if not (os.path.exists(new_path)):
+                    if (os.path.exists(new_path)):
+                        error_msg = 'folder named {} already exists. skipping initial folder {}'.format(new_path, path)
+                        log(error_msg)
+                        print(error_msg)
+                        continue
+                    else:
                         os.rename(path, new_path)
                         path = new_path
 

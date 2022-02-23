@@ -54,10 +54,15 @@ class DicomCaretaker(object):
         return folder_name
 
     def validate_ptid(self, ptid, log):
-        if (len(ptid) != 6):
+        if (len(ptid) != 6 and len(ptid != 9)):
             log("Incorrect folder name - wrong ptid {}".format(ptid))
             return False
-        #  add other validations for ptid depending on Site#, Funding Suffix, Participant Number and Visit
+
+        split_ptid = ptid.split("-")
+        if (len(split_ptid) > 1):
+            log("Incorrect folder name - wrong ptid {}".format(ptid))
+            return False
+
         return True
     
     def verify_folder_name(self, path, log):
