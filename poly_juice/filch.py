@@ -53,18 +53,6 @@ class DicomCaretaker(object):
         folder_name = patient_id + "_" + desired_study_date
         return folder_name
 
-    def validate_ptid(self, ptid, log):
-        if (len(ptid) != 6 and len(ptid != 9)):
-            log("Incorrect folder name - wrong ptid {}".format(ptid))
-            return False
-
-        split_ptid = ptid.split("-")
-        if (len(split_ptid) > 1):
-            log("Incorrect folder name - wrong ptid {}".format(ptid))
-            return False
-
-        return True
-    
     def validate_folder_name(self, path, log):
         folder_name = path.split("/")[-1]
         folder_name_constituents = folder_name.split("_")
@@ -75,10 +63,7 @@ class DicomCaretaker(object):
             dd = folder_name_constituents[2]
             yyyy = folder_name_constituents[3]
         except Exception as e:
-            log(e)
-            return False
-
-        if (not self.validate_ptid(ptid, log)):
+            log(str(e))
             return False
 
         if len(yyyy) != 4:

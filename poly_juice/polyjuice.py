@@ -143,17 +143,23 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
             first_file = ''
             if (len(files)) > 1:
                 editor = DicomCaretaker()
-                if not (editor.validate_folder_name(path, log)):
-                    new_path = get_correct_path_name(path, files[0], editor)
-                    
-                    if (os.path.exists(new_path)):
-                        error_msg = 'folder named {} already exists. skipping initial folder {}'.format(new_path, path)
-                        log(error_msg)
-                        print(error_msg)
-                        continue
-                    else:
-                        os.rename(path, new_path)
-                        path = new_path
+                try:
+                    if not (editor.validate_folder_name(path, log)):
+                        new_folder_name = get_correct_folder_name(path, files[0], editor)
+                        new_output_path = '{}/{}'.format(out_dir, new_folder_name)
+                        new_input_path = '{}/{}'.format("/".join(path.split("/")[:-1]), new_folder_name)
+                        
+                        if (os.path.exists(new_output_path)):
+                            error_msg = 'output folder named {} already exists. skipping folder {}'.format(new_output_path, path)
+                            log(error_msg)
+                            print(error_msg)
+                            continue
+                        else:
+                            os.rename(path, new_input_path)
+                            path = new_input_path
+                except Exception as e:
+                    failure_message = "{} failed".format(parent_file) + "\n" + str(e)
+                    log(failure_message)
 
             for name in files:
                 path_message = os.path.join(path, name)
@@ -190,19 +196,13 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
 
 
 
-def get_correct_path_name(path: str, first_file: str, editor):
-    # Fix the filename
-
+def get_correct_folder_name(path: str, first_file: str, editor):
     # Taking the first file from the folder
     working_file = os.path.join(path, first_file)
 
     with open(working_file, 'rb') as working_file:
         image = DicomImage(working_file)
-        new_name = editor.get_folder_name(image)
-        input_folder_name_array = path.split('/')
-        input_folder_name_array[-1] = new_name
-        return "/".join(input_folder_name_array)
-
+        return editor.get_folder_name(image)
 
 def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
                 first_file: str,

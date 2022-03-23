@@ -101,26 +101,20 @@ class TestFilch(unittest.TestCase):
 
     def test_validate_folder_name(self):
         # This function tests the validity of the name of the dicom folder
-        folder = '320001-01_02032022'
+        log = Lumberjack()
+        folder1 = '320001-01_02_03_2022'
+        folder2 = '320001-01_02032022'
+        folder3 = '320001-01_020322'
         editor = DicomCaretaker()
-        result = editor.validate_folder_name(folder)
+
+        expected = [True, False, False]
+        result = []
+
+        result.append(editor.validate_folder_name(folder1, log))
+        result.append(editor.validate_folder_name(folder2, log))
+        result.append(editor.validate_folder_name(folder3, log))
 
         self.assertTrue(result)
-
-    def validate_ptid(self):
-        # This function tests the validity of a ptid
-        ptid1 = '320001'
-        ptid2 = '320001-09'
-        ptid3 = '3200019'
-        editor = DicomCaretaker()
-
-        expected = [True, True, False]
-        output = []
-        output.append(editor.validate_ptid(ptid1))
-        output.append(editor.validate_ptid(ptid2))
-        output.append(editor.validate_ptid(ptid3))
-
-        self.assertEqual(expected, output)
 
     def test_save_output(self):
         dcm_image = 'tests/testOutput/102_01_01_2010/1'
