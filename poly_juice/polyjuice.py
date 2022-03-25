@@ -148,14 +148,14 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                         new_folder_name = get_correct_folder_name(path, files[0], editor)
                         new_output_path = '{}/{}'.format(out_dir, new_folder_name)
                         new_input_path = '{}/{}'.format("/".join(path.split("/")[:-1]), new_folder_name)
-                        
+                        os.rename(path, new_input_path)
+
                         if (os.path.exists(new_output_path)):
                             error_msg = 'output folder named {} already exists. skipping folder {}'.format(new_output_path, path)
                             log(error_msg)
                             print(error_msg)
                             continue
                         else:
-                            os.rename(path, new_input_path)
                             path = new_input_path
                 except Exception as e:
                     failure_message = "{} failed".format(parent_file) + "\n" + str(e)
