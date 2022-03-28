@@ -66,6 +66,10 @@ class DicomCaretaker(object):
             log(str(e))
             return False
 
+        if len(ptid.split('-')) > 1:
+            log("Incorrect folder name - wrong ptid {}".format(ptid))
+            return False
+
         if len(yyyy) != 4:
             log("Incorrect folder name - wrong year {}".format(yyyy))
             return False

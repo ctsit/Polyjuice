@@ -146,8 +146,15 @@ def walk_directory(parent_file: str, out_dir: str, zip_dir: str,
                 try:
                     if not (editor.validate_folder_name(path, log)):
                         new_folder_name = get_correct_folder_name(path, files[0], editor)
-                        new_output_path = '{}/{}'.format(out_dir, new_folder_name)
-                        new_input_path = '{}/{}'.format("/".join(path.split("/")[:-1]), new_folder_name)
+                        ptid_without_visit_no = new_folder_name.split("_")[0].split("-")[0]
+                        new_folder_name_correct_ptid = '{}_{}'.format(ptid_without_visit_no, "_".join(new_folder_name.split("_")[1:]))
+
+                        import ipdb;
+                        ipdb.set_trace()
+
+                        new_output_path = '{}/{}'.format(out_dir, new_folder_name_correct_ptid)
+                        new_input_path = '{}/{}'.format("/".join(path.split("/")[:-1]), new_folder_name_correct_ptid)
+
                         os.rename(path, new_input_path)
 
                         if (os.path.exists(new_output_path)):
