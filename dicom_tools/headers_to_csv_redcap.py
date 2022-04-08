@@ -41,9 +41,16 @@ def search_directory(parent_file: str, out_dir: str, dicom_folders: list, writer
 
 def read_files(dcm_file, writer):
     ds = dcmread(dcm_file)
+    folder_name = dcm_file.split("/")[-2]
+    visit_num = 1;
+    try:
+        visit_num = int(folder_name.split("_")[0].split("-")[1])
+    except Exception as e:
+        print("no visit number in folder name")
 
     data = (
             ["PatientID", ds.get("PatientID", "")],
+            ["EventName", get_visit_event_name(visit_num)]
             ["PatientName", ds.get("PatientName", "")],
             ["StudyDate", ds.get("StudyDate", "")],
             ["SeriesDescription", ds.get("SeriesDescription", "")],
@@ -91,12 +98,29 @@ def main():
         # Take a stroll through the folders
         search_directory(input_directory, output_file, dcm_folders, writer)
 
+def get_visit_event_name(self, visit_num):
+    visit_num_event_name_map = {
+        1: 'initial_visit_year_arm_1',
+        2: 'followup_visit_yea_arm_1',
+        3: 'followup_visit_yea_arm_1b',
+        4: 'followup_visit_yea_arm_1c',
+        5: 'followup_visit_yea_arm_1d',
+        6: 'followup_visit_yea_arm_1e',
+        7: 'followup_visit_yea_arm_1f',
+        8: 'followup_visit_yea_arm_1g',
+        9: 'followup_visit_yea_arm_1h',
+        10: 'followup_visit_yea_arm_1i',
+        11: 'followup_visit_yea_arm_1j',
+        12: 'followup_visit_yea_arm_1k',
+    }
+    return visit_num_event_name_map[visit_num]
+
 
 def make_csv(row: dict, dcm_file: str) -> dict:
 
     filled = {
         'ptid': row['PatientID'],  # Is ptid present for all MRI / PET images?
-        'redcap_event_name': '',
+        'redcap_event_name': row['EventName'],
         'image_type___1': '',
         'image_type___2': '',
         # REDCap form can have 1, 2, or 1 AND 2 as answers.

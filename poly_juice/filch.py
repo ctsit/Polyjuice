@@ -65,3 +65,20 @@ class DicomCaretaker(object):
             elif platform.system() == 'Linux':
                 os.system("sudo umount %s/ISOImage" % mount_location)
             os.system("rmdir %s" % mount_location)
+
+    def get_visit_event_name(self, visit_num):
+        visit_num_event_name_map = {
+            1: 'initial_visit_year_arm_1',
+            2: 'followup_visit_yea_arm_1',
+            3: 'followup_visit_yea_arm_1b',
+            4: 'followup_visit_yea_arm_1c',
+            5: 'followup_visit_yea_arm_1d',
+            6: 'followup_visit_yea_arm_1e',
+            7: 'followup_visit_yea_arm_1f',
+            8: 'followup_visit_yea_arm_1g',
+            9: 'followup_visit_yea_arm_1h',
+            10: 'followup_visit_yea_arm_1i',
+            11: 'followup_visit_yea_arm_1j',
+            12: 'followup_visit_yea_arm_1k',
+        }
+        return visit_num_event_name_map[visit_num];
