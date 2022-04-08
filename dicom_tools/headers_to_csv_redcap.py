@@ -48,9 +48,11 @@ def read_files(dcm_file, writer):
     except Exception as e:
         print("no visit number in folder name")
 
+    visit_event_name = get_visit_event_name(visit_num)
+
     data = (
             ["PatientID", ds.get("PatientID", "")],
-            ["EventName", get_visit_event_name(visit_num)]
+            ["EventName", visit_event_name],
             ["PatientName", ds.get("PatientName", "")],
             ["StudyDate", ds.get("StudyDate", "")],
             ["SeriesDescription", ds.get("SeriesDescription", "")],
@@ -98,7 +100,7 @@ def main():
         # Take a stroll through the folders
         search_directory(input_directory, output_file, dcm_folders, writer)
 
-def get_visit_event_name(self, visit_num):
+def get_visit_event_name(visit_num):
     visit_num_event_name_map = {
         1: 'initial_visit_year_arm_1',
         2: 'followup_visit_yea_arm_1',
@@ -111,9 +113,9 @@ def get_visit_event_name(self, visit_num):
         9: 'followup_visit_yea_arm_1h',
         10: 'followup_visit_yea_arm_1i',
         11: 'followup_visit_yea_arm_1j',
-        12: 'followup_visit_yea_arm_1k',
+        12: 'followup_visit_yea_arm_1k'
     }
-    return visit_num_event_name_map[visit_num]
+    return visit_num_event_name_map.get(visit_num)
 
 
 def make_csv(row: dict, dcm_file: str) -> dict:
