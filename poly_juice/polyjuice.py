@@ -185,6 +185,13 @@ def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
     '''
     try:
         name = os.path.basename(working_file)
+        first_file_modified_arr = first_file.split('/')
+        in_folder_name = first_file_modified_arr[-2]
+        in_folder_arr = in_folder_name.split("_")
+        in_folder_arr[0] = in_folder_arr[0].split("-")[0]
+        first_file_modified_arr[-2] = "_".join(in_folder_arr)
+        first_file_modified = "/".join(first_file_modified_arr)
+
         with open(working_file, 'rb') as working_file:
             image = DicomImage(working_file)
 
@@ -194,7 +201,7 @@ def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
             identified_folder = os.path.join(out_dir, folder_name)
 
             check = os.path.join(folder_name, name)
-            if check in first_file:
+            if check in first_file or check in first_file_modified:
                 check_directory(identified_folder)
                 dicom_folders.append(identified_folder)
 

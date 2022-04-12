@@ -53,6 +53,16 @@ class DicomCaretaker(object):
         folder_name = patient_id + "_" + desired_study_date
         return folder_name
 
+    # def get_folder_name_with_visit_num(self, image, visit_num):
+    #     study_date = image.get_study_date()
+    #     patient_id = image.get_patient_id()
+
+    #     # Change study_date to desired format
+    #     desired_study_date = datetime.datetime.strptime(study_date, '%Y%m%d').strftime('%m_%d_%Y')
+    #     # Rename according to NACC conventions
+    #     folder_name = patient_id + "-" + visit_num + "_" + desired_study_date
+    #     return folder_name
+
     def save_output(self, image, identified_folder, filename):
         output = os.path.join(identified_folder, filename)
         image.save_image(output)
