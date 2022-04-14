@@ -185,12 +185,7 @@ def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
     '''
     try:
         name = os.path.basename(working_file)
-        first_file_modified_arr = first_file.split('/')
-        in_folder_name = first_file_modified_arr[-2]
-        in_folder_arr = in_folder_name.split("_")
-        in_folder_arr[0] = in_folder_arr[0].split("-")[0]
-        first_file_modified_arr[-2] = "_".join(in_folder_arr)
-        first_file_modified = "/".join(first_file_modified_arr)
+        first_file_modified = get_modified_first_file(first_file)
 
         with open(working_file, 'rb') as working_file:
             image = DicomImage(working_file)
@@ -230,6 +225,16 @@ def zip_folder(dicom_folders: list, zip_dir: str, log: Lumberjack) -> None:
         os.system("mv {}.zip {}".format(folder, zip_dir))
         move_zip_message = "{} moved to {}".format(folder, zip_dir)
         log(move_zip_message)
+
+
+def get_modified_first_file(first_file: str):
+    first_file_modified_arr = first_file.split('/')
+    in_folder_name = first_file_modified_arr[-2]
+    in_folder_arr = in_folder_name.split("_")
+    in_folder_arr[0] = in_folder_arr[0].split("-")[0]
+    first_file_modified_arr[-2] = "_".join(in_folder_arr)
+    first_file_modified = "/".join(first_file_modified_arr)
+    return first_file_modified
 
 
 def main(args):
