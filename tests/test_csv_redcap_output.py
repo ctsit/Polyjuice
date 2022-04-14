@@ -16,7 +16,7 @@ class TestRedcapOutput(unittest.TestCase):
         dcm_file = 'tests/testInput/MRI/101_01_01_2010/1'
         expected = {
             'ptid': '101',
-            'redcap_event_name': '',
+            'redcap_event_name': 'initial_visit_year_arm_1',
             'image_type___1': '1',
             'image_type___2': '0',
             'img_mri_patient_name': 'PATIENT',
@@ -57,7 +57,7 @@ class TestRedcapOutput(unittest.TestCase):
         dcm_file = 'tests/testInput/PET/103_01_01_2010/10402932'
         expected = {
             'ptid': '103',
-            'redcap_event_name': '',
+            'redcap_event_name': 'initial_visit_year_arm_1',
             'image_type___1': '0',
             'image_type___2': '1',
             'img_mri_patient_name': '',
