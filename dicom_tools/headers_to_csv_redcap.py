@@ -43,16 +43,18 @@ def read_files(dcm_file, writer):
     ds = dcmread(dcm_file)
     folder_name = dcm_file.split("/")[-2]
     visit_num = 1;
+    has_visit_num = True
     try:
         visit_num = int(folder_name.split("_")[0].split("-")[1])
     except Exception as e:
         print("no visit number in folder name")
+        has_visit_num = False
 
     visit_event_name = get_visit_event_name(visit_num)
 
     data = (
             ["PatientID", ds.get("PatientID", "")],
-            ["EventName", visit_event_name],
+            ["EventName", visit_event_name if has_visit_num else ''],
             ["PatientName", ds.get("PatientName", "")],
             ["StudyDate", ds.get("StudyDate", "")],
             ["SeriesDescription", ds.get("SeriesDescription", "")],
