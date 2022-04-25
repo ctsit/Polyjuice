@@ -248,12 +248,12 @@ def main(args):
     if reset_IDS is None:
         reset_IDS = 'poly_juice/ids.csv'
 
+    input_root = ''
+
     if args[_use_config]:
         input_root = config.get('in_data_root')
     else:
         input_root = args[INPUT_DIR]
-    log_path = os.path.join(out_dir, 'log.txt')
-    log = Lumberjack(log_path, verbose)
     with open(reset_IDS, mode='a') as in_oldIDfile:
         writer = csv.writer(in_oldIDfile, delimiter=",")
         for path, subdirs, files in os.walk(input_root):
@@ -264,7 +264,6 @@ def main(args):
 
                 if len(ptid_visit) > 1:
                     writer.writerow([ptid, ptid_visit[0]])
-                    log("Writing to reset_IDS - ", ptid, ptid_visit[0])
 
 
     try:
