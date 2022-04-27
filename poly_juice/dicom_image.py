@@ -32,7 +32,7 @@ class DicomImage(object):
         for key in id_pairs:
             if(patient_id == key):
                 new_id = id_pairs.get(patient_id)
-                id_message = "{}: New ID: {}".format(self.filepath, new_id)
+                id_message = "{}: Changed Old ID: {} and New ID: {}".format(self.filepath, patient_id, new_id)
                 log(id_message)
                 self.modify_item('PatientID', new_id, False, log)
                 return None
