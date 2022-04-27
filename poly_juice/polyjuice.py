@@ -248,6 +248,7 @@ def main(args):
     if reset_IDS is None:
         reset_IDS = 'poly_juice/ids.csv'
 
+    # converting the ptid as (ptid+visit_no) into only (ptid) by writing them into ids.csv
     input_root = ''
 
     if args[_use_config]:
