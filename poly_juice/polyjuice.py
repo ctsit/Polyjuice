@@ -185,6 +185,8 @@ def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
     '''
     try:
         name = os.path.basename(working_file)
+        first_file_modified = get_modified_first_file(first_file)
+
         with open(working_file, 'rb') as working_file:
             image = DicomImage(working_file)
 
@@ -194,7 +196,7 @@ def clean_files(editor: DicomCaretaker, working_file: str, out_dir: str,
             identified_folder = os.path.join(out_dir, folder_name)
 
             check = os.path.join(folder_name, name)
-            if check in first_file:
+            if check in first_file or check in first_file_modified:
                 check_directory(identified_folder)
                 dicom_folders.append(identified_folder)
 
@@ -225,6 +227,16 @@ def zip_folder(dicom_folders: list, zip_dir: str, log: Lumberjack) -> None:
         log(move_zip_message)
 
 
+def get_modified_first_file(first_file: str):
+    first_file_modified_arr = first_file.split('/')
+    in_folder_name = first_file_modified_arr[-2]
+    in_folder_arr = in_folder_name.split("_")
+    in_folder_arr[0] = in_folder_arr[0].split("-")[0]
+    first_file_modified_arr[-2] = "_".join(in_folder_arr)
+    first_file_modified = "/".join(first_file_modified_arr)
+    return first_file_modified
+
+
 def main(args):
     if not args[CONFIG_PATH]:
         args[CONFIG_PATH] = 'poly_juice/config.yaml'
@@ -235,6 +247,26 @@ def main(args):
     reset_IDS = config.get('new_IDs')
     if reset_IDS is None:
         reset_IDS = 'poly_juice/ids.csv'
+
+    # converting the ptid as (ptid+visit_no) into only (ptid) by writing them into ids.csv
+    input_root = ''
+
+    if args[_use_config]:
+        input_root = config.get('in_data_root')
+    else:
+        input_root = args[INPUT_DIR]
+    with open(reset_IDS, mode='a') as in_oldIDfile:
+        writer = csv.writer(in_oldIDfile, delimiter=",")
+        for path, subdirs, files in os.walk(input_root):
+            for folder in subdirs:
+                folder_name_arr = folder.split("_")
+                ptid = folder_name_arr[0]
+                ptid_visit = ptid.split("-")
+
+                if len(ptid_visit) > 1:
+                    writer.writerow([ptid, ptid_visit[0]])
+
+
     try:
         with open(reset_IDS, mode='r') as in_oldIDfile:
             reader = csv.reader(in_oldIDfile)
