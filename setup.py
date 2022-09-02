@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='polyjuice',
-    version='2.3.0',
+    version='2.4.0',
     description='Anonymize dicom files.',
     url='https://github.com/ctsit/polyjuice',
     author='Naomi Braun, Ajantha Ramineni, Samantha Emerson, Kevin Hanson',
