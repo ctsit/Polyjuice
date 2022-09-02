@@ -21,6 +21,23 @@ Example
 
 -------------------------------------------------------------------------
 -------------------------------------------------------------------------
+## [2.4.0] 2022-09-02
+### Summary
+* In this release, the handling of erroneous data was improved.
+
+### Added
+ * Add a minorcomment to make code more readable (karanasthana)
+ * Add conditional addition of redcap event name in th event of presence of a visit number in the folder name for the headers_redcap file (karanasthana)
+ * Add mapping from ptid-visit_no to ptid (karanasthana)
+ * Add parsing of the visit id included in the folder name (karanasthana)
+ * Add event name parsing in headers_to_csv_redcap (karanasthana)
+
+### Changed
+ * Change in logging of old id to new id (karanasthana)
+ * Remove logging and fix exception (karanasthana)
+ * Fix test cases to incorporate the new redcap event name changes (karanasthana)
+ * Fix bugs in the get visit number event name code (karanasthana)
+
 ##[2.3.0] 2021-02-03
 ### Summary
 * This release adds more unit tests and adds a default ids.csv file to avoid
